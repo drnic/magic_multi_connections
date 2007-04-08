@@ -1,6 +1,5 @@
 module MagicMultiConnection::Connected
   def self.included(base)
-    puts "Including MagicMultiConnection::Connected on #{base}"
     base.instance_eval <<-EOS
       alias :pre_connected_const_missing :const_missing
   
