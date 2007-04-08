@@ -44,7 +44,7 @@ hoe = Hoe.new(GEM_NAME, VERS) do |p|
   p.summary = DESCRIPTION
   p.url = HOMEPATH
   p.rubyforge_name = RUBYFORGE_PROJECT if RUBYFORGE_PROJECT
-  p.test_globs = ["test/**/*_test.rb"]
+  p.test_globs = ["test/**/test_*.rb"]
   p.clean_globs = CLEAN  #An array of file patterns to delete on clean.
   
   # == Optional
@@ -52,6 +52,34 @@ hoe = Hoe.new(GEM_NAME, VERS) do |p|
   #p.extra_deps     - An array of rubygem dependencies.
   #p.spec_extras    - A hash of extra values to set in the gemspec.
 end
+
+for adapter in %w( mysql sqlite oracle postgresql ) # UNTESTED - firebird sqlserver sqlserver_odbc db2 sybase openbase )
+  Rake::TestTask.new("test_#{adapter}") { |t|
+    t.libs << "test" << "test/connections/native_#{adapter}"
+    t.pattern = "test/test_*.rb"
+    t.verbose = true
+  }
+end
+
+SCHEMA_PATH = File.join(File.dirname(__FILE__), *%w(test fixtures db_definitions))
+
+
+desc 'Build the PostgreSQL test databases'
+task :build_postgresql_databases do 
+  sh %{ createdb "#{GEM_NAME}_unittest" }
+  sh %{ psql "#{GEM_NAME}_unittest" -f #{File.join(SCHEMA_PATH, 'postgresql.sql')} }
+  sh %{ createdb "#{GEM_NAME}_extra_unittest" }
+  sh %{ psql "#{GEM_NAME}_extra_unittest" -f #{File.join(SCHEMA_PATH, 'postgresql.sql')} }
+end
+
+desc 'Drop the PostgreSQL test databases'
+task :drop_postgresql_databases do 
+  sh %{ dropdb "#{GEM_NAME}_unittest" }
+  sh %{ dropdb "#{GEM_NAME}_extra_unittest" }
+end
+
+desc 'Rebuild the PostgreSQL test databases'
+task :rebuild_postgresql_databases => [:drop_postgresql_databases, :build_postgresql_databases]
 
 
 desc 'Generate website files'
