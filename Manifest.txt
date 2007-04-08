@@ -3,6 +3,7 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
+lib/ext_active_record/connection_specification.rb
 lib/magic_multi_connections.rb
 lib/magic_multi_connections/connected.rb
 lib/magic_multi_connections/module.rb
@@ -17,6 +18,7 @@ test/fixtures/people.yml
 test/fixtures/person.rb
 test/test_helper.rb
 test/test_magic_multi_connections.rb
+test/test_parent_module.rb
 test/test_preexisting_module.rb
 website/index.html
 website/index.txt
