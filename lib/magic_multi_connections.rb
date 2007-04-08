@@ -1,0 +1,1 @@
+Dir[File.join(File.dirname(__FILE__), 'magic_multi_connections/**/*.rb')].sort.each { |lib| require lib }

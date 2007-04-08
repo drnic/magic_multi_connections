@@ -1,0 +1,83 @@
+h1. Magic Multi-Connections
+
+h1. &#x2192; Ruby on Rails
+
+h1. &#x2192; ActiveRecords
+
+h2. What
+
+ActiveRecord models are allowed one connection to a database at a time, per class. Ruby on Rails sets up the default connection based on your database.yml configuration to automatically select *development*, *test* or *production*.
+
+But, what if you want to access two or more databases - have 2+ connections open - at the same time. ActiveRecord requires that you subclass <code>ActiveRecord::Base</code>. 
+	
+That prevents you doing migrations from one database to another. It prevents you using one set of model classes on two or more databases with the same schema.
+
+Magic Multi-Connections allows you to write your models once, and use them for multiple database Rails databases at the same time. How? Using magical namespacing.
+
+<pre syntax="ruby">class Person < ActiveRecord::Base; end
+ActiveRecord::Base.establish_connection :production
+Person.connection # => production
+
+module ContactRepository
+  establish_connection :contact_repo
+end
+ContactRepository::Person.connection # => contact_repo
+
+old_person = ContactRepository::Person.find_by_email(email)
+person = old_person.create_as(Person)
+</pre>
+
+You do not have to redefine your models for the multi-connection module <code>ContactRepository</code>, they are automatically picked up for you. Magically.
+
+h2. Installing
+
+<pre syntax="ruby">sudo gem install magic_multi_connections</pre>
+
+Rails: Add the following to the bottom of your <code>environment.rb</code> file
+
+<pre syntax="ruby">require 'magic_multi_connections'</pre>
+
+Ruby scripts: Add the following to the top of your script
+
+<pre syntax="ruby">require 'rubygems'
+require 'magic_multi_connections'</pre>
+
+h2. The basics
+
+
+
+h2. Demonstration of usage
+
+
+
+h2. Other tricks
+
+The Magic Multi-Connections includes <code>diff</code> and <code>diff?</code> methods extracted from the "Riff plugin":http://tfletcher.com/svn/rails-plugins/riff/README by "Tim Fletcher":http://tfletcher.com/, so that <code>id</code> values are ignored when comparing objects from different connections/namespaces.
+
+<pre syntax="ruby"># Detect differences between two activerecords, e.g.
+new_person = Person.find_by_username('drnic')
+old_person = ContactRepository::Person.find_by_username('drnic')
+
+new_person.diff?(old_person)   # => true
+
+new_person.diff(old_person)    # => { :name => ['Dr Nic', 'Nic'], :age => [32, 20] }
+</pre>
+
+h2. Dr Nic's Blog
+
+"http://www.drnicwilliams.com":http://www.drnicwilliams.com - for future announcements and
+other stories and things.
+
+h2. Forum
+
+Discussion about the Magic Multi-Connections is on the Magic Models forum:
+
+"http://groups.google.com/group/magicmodels":http://groups.google.com/group/magicmodels
+
+h2. Licence
+
+This code is free to use under the terms of the MIT licence. 
+
+h2. Contact
+
+Comments are welcome. Send an email to "Dr Nic Williams":mailto:drnicwilliams@gmail.com.
