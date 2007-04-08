@@ -1,5 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper.rb'
 
+module NormalModule; end
+
 class TestMagicMultiConnection < Test::Unit::TestCase
 
   def setup
@@ -15,5 +17,10 @@ class TestMagicMultiConnection < Test::Unit::TestCase
     assert_equal('ContactRepository::Person', ContactRepository::Person.name)
     assert_equal('ContactRepository::Person', ContactRepository::Person.active_connection_name)
     assert_equal(0, ContactRepository::Person.count)
+  end
+  
+  def test_normal_modules_shouldnt_do_anything
+    assert_raise(NameError) { NormalModule::Person }
+    
   end
 end
