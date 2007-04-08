@@ -7,7 +7,7 @@ body {
   color: #eee;
 }
 h1, h2, h3, h4, h5, h6 {
-  color: #FFEDFA;
+  color: #A79712;
 }
 h1 { 
   font-family: sans-serif;
@@ -16,6 +16,7 @@ h1 {
   line-height: 0.8em;
   letter-spacing: -0.1ex;
 	margin: 5px;
+  color: #FFEDFA;	
 }
 h1.primary {
   color: #A79712;	
@@ -104,12 +105,12 @@ pre, code {
   text-align: right;
   font-family: sans-serif;
   font-weight: normal;
-  color: #510;
+  color: #FFEDFA;
   background-color: #A79712;
   padding: 15px 20px 10px 20px;
   margin: 0 auto;
 	margin-top: 15px;
-  border: 3px solid #510;
+  border: 3px solid #FFEDFA;
 }
 
 #version .numbers {
@@ -121,7 +122,7 @@ pre, code {
 
 #version a {
   text-decoration: none;
-  color: #510;
+  color: #FFEDFA;
 }
 
 .clickable {
