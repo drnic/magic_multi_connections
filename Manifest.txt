@@ -4,10 +4,17 @@ Manifest.txt
 README.txt
 Rakefile
 lib/magic_multi_connections.rb
+lib/magic_multi_connections/connected.rb
+lib/magic_multi_connections/module.rb
 lib/magic_multi_connections/version.rb
 scripts/txt2html
 scripts/txt2js
 setup.rb
+test/connections/native_postgresql/connection.rb
+test/fixtures/contact_repository.rb
+test/fixtures/db_definitions/postgresql.sql
+test/fixtures/people.yml
+test/fixtures/person.rb
 test/test_helper.rb
 test/test_magic_multi_connections.rb
 website/index.html
