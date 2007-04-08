@@ -17,7 +17,13 @@ module MagicMultiConnection::Connected
         self.const_set class_name, klass
       end
     EOS
+    base.extend(ClassMethods)
   end
   
+  module ClassMethods
+    def establish_connection_on(klass)
+      klass.establish_connection self.connection_spec
+    end
+  end
 end
 

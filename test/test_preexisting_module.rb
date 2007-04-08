@@ -33,7 +33,7 @@ class TestPreexistingModule < Test::Unit::TestCase
       end
     EOS
     assert(AnotherPre::Person.instance_methods.include?("tester"), "AnotherPre::Person should include #tester method")
+    assert_equal("AnotherPre::Person", AnotherPre::Person.name)
     assert_equal("AnotherPre::Person", AnotherPre::Person.active_connection_name)
-    p AnotherPre::Person.connection
   end
 end

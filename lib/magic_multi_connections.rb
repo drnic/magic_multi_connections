@@ -18,3 +18,4 @@ end
 require 'magic_multi_connections/version'
 require 'magic_multi_connections/connected'
 require 'magic_multi_connections/module'
+require 'ext_active_record/connection_specification'
