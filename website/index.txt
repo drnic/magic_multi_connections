@@ -49,6 +49,17 @@ h2. The basics
 h2. Demonstration of usage
 
 
+h2. Pre-existing modules
+
+In Rails, model files are placed in the *app/models* folder. If you place them in a subfolder, say  *app/models/admin*, then those model classes are access via module namespaces. 
+
+So,  *app/models/admin/page.rb* represents the <code>Admin::Page</code> class.
+
+Magic Multi-Connections works for these model classes as well.
+
+<pre syntax="ruby">Admin.establish_connection :admin_dev
+Admin::Page.active_connection_name # => "Admin::Page"
+</pre>
 
 h2. Other tricks
 

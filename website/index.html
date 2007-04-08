@@ -98,6 +98,23 @@
 	<h2>Demonstration of usage</h2>
 
 
+	<h2>Pre-existing modules</h2>
+
+
+	<p>In Rails, model files are placed in the <strong>app/models</strong> folder. If you place them in a subfolder, say  <strong>app/models/admin</strong>, then those model classes are access via module namespaces.</p>
+
+
+	<p>So,  <strong>app/models/admin/page.rb</strong> represents the <code>Admin::Page</code> class.</p>
+
+
+	<p>Magic Multi-Connections works for these model classes as well.</p>
+
+
+	<p><pre class="syntax"><span class="constant">Admin</span><span class="punct">.</span><span class="ident">establish_connection</span> <span class="symbol">:admin_dev</span>
+<span class="constant">Admin</span><span class="punct">::</span><span class="constant">Page</span><span class="punct">.</span><span class="ident">active_connection_name</span> <span class="comment"># =&gt; &quot;Admin::Page&quot;</span>
+</pre></p>
+
+
 	<h2>Other tricks</h2>
 
 
