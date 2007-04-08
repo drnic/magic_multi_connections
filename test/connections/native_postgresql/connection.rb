@@ -3,13 +3,22 @@ require 'logger'
 
 ActiveRecord::Base.logger = Logger.new("debug.log")
 
-db1 = 'magic_multi_connections_unittest'
+db = 'magic_multi_connections_unittest'
 
-connection_options = {
+db_connection_options = {
   :adapter  => "postgresql",
   :encoding => "utf8",
-  :database => db1
+  :database => db
 }
 
-ActiveRecord::Base.configurations = { db1 => connection_options }
-ActiveRecord::Base.establish_connection(connection_options)
+db_extra = 'magic_multi_connections_extra_unittest'
+
+db_extra_connection_options = {
+  :adapter  => "postgresql",
+  :encoding => "utf8",
+  :database => db_extra
+}
+
+
+ActiveRecord::Base.configurations = { db => db_connection_options, db_extra => db_extra_connection_options }
+ActiveRecord::Base.establish_connection(db)

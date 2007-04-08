@@ -1,8 +1,9 @@
 class Module
+  attr_accessor :connection_spec
+  
   def establish_connection(connection_spec)
     include MagicMultiConnection::Connected
-    p methods.sort
-    # create_class 'Person', ActiveRecord::Base
+    instance_variable_set '@connection_spec', connection_spec
   end
 end
 
