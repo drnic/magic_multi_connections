@@ -20,5 +20,5 @@ db_extra_connection_options = {
 }
 
 
-ActiveRecord::Base.configurations = { db => db_connection_options, db_extra => db_extra_connection_options }
-ActiveRecord::Base.establish_connection(db)
+ActiveRecord::Base.configurations = { 'production' => db_connection_options, 'contact_repo' => db_extra_connection_options }
+ActiveRecord::Base.establish_connection(:production)

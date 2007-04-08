@@ -1,3 +1,3 @@
 module ContactRepository
-  establish_connection 'magic_multi_connections_extra_unittest'
+  establish_connection :contact_repo
 end
