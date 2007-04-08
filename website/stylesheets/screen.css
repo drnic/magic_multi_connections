@@ -42,6 +42,12 @@ blockquote {
   font-size: 80%;
 }
 
+strong {
+	background-color: #CDDCA4;
+	color: #3C3C3C;
+	font-weight: normal;
+}
+
 #main {
   width: 45em;
   padding: 0;
