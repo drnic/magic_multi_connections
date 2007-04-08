@@ -42,12 +42,141 @@ Ruby scripts: Add the following to the top of your script
 <pre syntax="ruby">require 'rubygems'
 require 'magic_multi_connections'</pre>
 
-h2. The basics
 
+h2. Demonstration with Rails
 
+A quick demonstration within Rails to provide a parallel "private" database for an application.
 
-h2. Demonstration of usage
+h3. 1. Create rails app
 
+Using sqlite3 here, but use your preferred db:
+
+<pre>> rails privacy -d sqlite3
+> cd privacy
+> ruby script/generate model Person
+> cp config/environments/development.rb config/environments/private.rb
+</pre>
+
+The last line allows us to play with our *private* database within the console and rake tasks.
+
+h3. 2. Edit *config/database.yml* and add our private database:
+
+Add the following to the bottom of *config/database.yml*
+
+<pre syntax="yaml">
+private:
+  adapter: sqlite3
+  database: db/private.sqlite3
+</pre>
+
+h3. 3. Create a database schema
+
+Edit *db/migrate/001_create_people.rb*
+
+<pre syntax="ruby">class CreatePeople < ActiveRecord::Migration
+  def self.up
+    create_table :people do |t|
+      t.column :name, :string
+    end
+  end
+
+  def self.down
+    drop_table :people
+  end
+end
+</pre>
+
+From the command line, migrate this to our *development* and *private* databases:
+
+<pre>> rake db:migrate
+> rake db:migrate RAILS_ENV=private</pre>
+
+h3. 4. Add some data to databases
+
+<pre syntax="ruby">> ruby script/console development
+>> Person.create(:name => 'Nic')
+>> Person.create(:name => 'Banjo')
+>> exit
+> ruby script/console private
+>> Person.create(:name => 'Super Magical Nic')
+>> exit</pre>
+
+Now it should be obvious which database our app is accessing.
+
+h3. 5. Update environment.rb
+
+Edit *config/environment.rb* to include the library and create the *Private* module.
+
+Add the following to the end of the file.
+
+<pre syntax="ruby">
+require "magic_multi_connections"
+
+module Private
+  establish_connection :private
+end
+</pre>
+
+This tells the *Private* module that any model class that is requested will be assigned a connection to the *private* database, as defined in the *config/database.yml* specification.
+
+h3. 6. Setup a controller
+
+Create a *people* controller with a *index* action
+
+<pre>> ruby script/generate controller people index</pre>
+
+Edit your controller *app/controllers/people_controller.rb*
+
+<pre syntax="ruby">class PeopleController < ApplicationController
+
+  before_filter :check_private
+  
+  def index
+    @people = @mod::Person.find(:all)
+  end
+
+  private
+  def check_private
+    @mod = params[:private] ? Private : Object
+  end
+end
+</pre>
+
+The *check_private* action is a hack to demonstrate one method for selecting the database. In reality, a stupid one for hiding a "private" database, but you get the point.
+
+After *check_private* is called, *@mod* is either the *Object* (default) module or the *Private* module. The *Person* class is accessible through either of them.
+
+Yes, <code>@mod::Person</code> is uglier than just <code>Person</code>. Sorry.
+
+h3. 7. Setup the index.rhtml view
+
+Edit *app/views/people/index.rhtml*
+
+<pre syntax="html"><h1><%= @mod::Person %></h1>
+<h2><%= @mod::Person.active_connection_name %></h2>
+
+<ol>
+  <% @people.each do |person| -%>
+  <li><%= "#{person.name} - #{person.class}" %></li>
+  <% end -%>
+</ol>
+</pre>
+
+h3. 8. Test our multi-connection Rails app
+
+Launch the app
+
+<pre>> mongrel_rails start</pre>
+
+In your browser, go to "http://localhost:3000/people":http://localhost:3000/people and see the list of people: Nic and Banjo.
+
+Now, to see the private database, go to "http://localhost:3000/people?private=1":http://localhost:3000/people?private=1 and see the private list. Its so private, I won't show it here.
+
+Note: you may need to refresh the private url to see the results. Perhaps Rails is caching the SQL even though its a different connection to a different database. If you know what's happening here, please "email me":mailto:drnicwilliams@gmail.com?subject=MMC+caching+problem or the "forum":mailto:magicmodels@googlegroups.com?subject=MMC+caching+problem. Thanks.
+
+h3. 9. End
+
+There ends our example of a Rails application using one model class to access multiple databases cleanly.
 
 h2. Pre-existing modules
 

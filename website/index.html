@@ -33,7 +33,7 @@
     <h1 class=primary>Magic Multi-Connections</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/magicmodels"; return false'>
       Get Version
-      <a href="http://rubyforge.org/projects/magicmodels" class="numbers">0.1.0</a>
+      <a href="http://rubyforge.org/projects/magicmodels" class="numbers">1.0.0</a>
     </div>
     <h1>&#x2192; Ruby on Rails</h1>
 
@@ -92,10 +92,176 @@
 <span class="ident">require</span> <span class="punct">'</span><span class="string">magic_multi_connections</span><span class="punct">'</span></pre></p>
 
 
-	<h2>The basics</h2>
+	<h2>Demonstration with Rails</h2>
 
 
-	<h2>Demonstration of usage</h2>
+	<p>A quick demonstration within Rails to provide a parallel &#8220;private&#8221; database for an application.</p>
+
+
+	<h3>1. Create rails app</h3>
+
+
+	<p>Using sqlite3 here, but use your preferred db:</p>
+
+
+<pre>&gt; rails privacy -d sqlite3
+&gt; cd privacy
+&gt; ruby script/generate model Person
+&gt; cp config/environments/development.rb config/environments/private.rb
+</pre>
+
+	<p>The last line allows us to play with our <strong>private</strong> database within the console and rake tasks.</p>
+
+
+	<h3>2. Edit <strong>config/database.yml</strong> and add our private database:</h3>
+
+
+	<p>Add the following to the bottom of <strong>config/database.yml</strong></p>
+
+
+	<p><pre class="syntax">
+<span class="key">private</span><span class="punct">:</span>
+  <span class="key">adapter</span><span class="punct">:</span> sqlite3
+  <span class="key">database</span><span class="punct">:</span> db/private.sqlite3
+</pre></p>
+
+
+	<h3>3. Create a database schema</h3>
+
+
+	<p>Edit <strong>db/migrate/001_create_people.rb</strong></p>
+
+
+	<p><pre class="syntax"><span class="keyword">class </span><span class="class">CreatePeople</span> <span class="punct">&lt;</span> <span class="constant">ActiveRecord</span><span class="punct">::</span><span class="constant">Migration</span>
+  <span class="keyword">def </span><span class="method">self.up</span>
+    <span class="ident">create_table</span> <span class="symbol">:people</span> <span class="keyword">do</span> <span class="punct">|</span><span class="ident">t</span><span class="punct">|</span>
+      <span class="ident">t</span><span class="punct">.</span><span class="ident">column</span> <span class="symbol">:name</span><span class="punct">,</span> <span class="symbol">:string</span>
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+
+  <span class="keyword">def </span><span class="method">self.down</span>
+    <span class="ident">drop_table</span> <span class="symbol">:people</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre></p>
+
+
+	<p>From the command line, migrate this to our <strong>development</strong> and <strong>private</strong> databases:</p>
+
+
+<pre>&gt; rake db:migrate
+&gt; rake db:migrate RAILS_ENV=private</pre>
+
+	<h3>4. Add some data to databases</h3>
+
+
+	<p><pre class="syntax"><span class="punct">&gt;</span> <span class="ident">ruby</span> <span class="ident">script</span><span class="punct">/</span><span class="ident">console</span> <span class="ident">development</span>
+<span class="punct">&gt;&gt;</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:name</span> <span class="punct">=&gt;</span> <span class="punct">'</span><span class="string">Nic</span><span class="punct">')</span>
+<span class="punct">&gt;&gt;</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:name</span> <span class="punct">=&gt;</span> <span class="punct">'</span><span class="string">Banjo</span><span class="punct">')</span>
+<span class="punct">&gt;&gt;</span> <span class="ident">exit</span>
+<span class="punct">&gt;</span> <span class="ident">ruby</span> <span class="ident">script</span><span class="punct">/</span><span class="ident">console</span> <span class="ident">private</span>
+<span class="punct">&gt;&gt;</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:name</span> <span class="punct">=&gt;</span> <span class="punct">'</span><span class="string">Super Magical Nic</span><span class="punct">')</span>
+<span class="punct">&gt;&gt;</span> <span class="ident">exit</span></pre></p>
+
+
+	<p>Now it should be obvious which database our app is accessing.</p>
+
+
+	<h3>5. Update environment.rb</h3>
+
+
+	<p>Edit <strong>config/environment.rb</strong> to include the library and create the <strong>Private</strong> module.</p>
+
+
+	<p>Add the following to the end of the file.</p>
+
+
+	<p><pre class="syntax">
+<span class="ident">require</span> <span class="punct">&quot;</span><span class="string">magic_multi_connections</span><span class="punct">&quot;</span>
+
+<span class="keyword">module </span><span class="module">Private</span>
+  <span class="ident">establish_connection</span> <span class="symbol">:private</span>
+<span class="keyword">end</span>
+</pre></p>
+
+
+	<p>This tells the <strong>Private</strong> module that any model class that is requested will be assigned a connection to the <strong>private</strong> database, as defined in the <strong>config/database.yml</strong> specification.</p>
+
+
+	<h3>6. Setup a controller</h3>
+
+
+	<p>Create a <strong>people</strong> controller with a <strong>index</strong> action</p>
+
+
+<pre>&gt; ruby script/generate controller people index</pre>
+
+	<p>Edit your controller <strong>app/controllers/people_controller.rb</strong></p>
+
+
+	<p><pre class="syntax"><span class="keyword">class </span><span class="class">PeopleController</span> <span class="punct">&lt;</span> <span class="constant">ApplicationController</span>
+
+  <span class="ident">before_filter</span> <span class="symbol">:check_private</span>
+  
+  <span class="keyword">def </span><span class="method">index</span>
+    <span class="attribute">@people</span> <span class="punct">=</span> <span class="attribute">@mod</span><span class="punct">::</span><span class="constant">Person</span><span class="punct">.</span><span class="ident">find</span><span class="punct">(</span><span class="symbol">:all</span><span class="punct">)</span>
+  <span class="keyword">end</span>
+
+  <span class="ident">private</span>
+  <span class="keyword">def </span><span class="method">check_private</span>
+    <span class="attribute">@mod</span> <span class="punct">=</span> <span class="ident">params</span><span class="punct">[</span><span class="symbol">:private</span><span class="punct">]</span> <span class="punct">?</span> <span class="constant">Private</span> <span class="punct">:</span> <span class="constant">Object</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre></p>
+
+
+	<p>The <strong>check_private</strong> action is a hack to demonstrate one method for selecting the database. In reality, a stupid one for hiding a &#8220;private&#8221; database, but you get the point.</p>
+
+
+	<p>After <strong>check_private</strong> is called, <strong>@mod</strong> is either the <strong>Object</strong> (default) module or the <strong>Private</strong> module. The <strong>Person</strong> class is accessible through either of them.</p>
+
+
+	<p>Yes, <code>@mod::Person</code> is uglier than just <code>Person</code>. Sorry.</p>
+
+
+	<h3>7. Setup the index.rhtml view</h3>
+
+
+	<p>Edit <strong>app/views/people/index.rhtml</strong></p>
+
+
+	<p><pre class="syntax">&lt;h1&gt;&lt;%= @mod::Person %&gt;&lt;/h1&gt;
+&lt;h2&gt;&lt;%= @mod::Person.active_connection_name %&gt;&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;% @people.each do |person| -%&gt;
+  &lt;li&gt;&lt;%= &quot;#{person.name} - #{person.class}&quot; %&gt;&lt;/li&gt;
+  &lt;% end -%&gt;
+&lt;/ol&gt;
+</pre></p>
+
+
+	<h3>8. Test our multi-connection Rails app</h3>
+
+
+	<p>Launch the app</p>
+
+
+<pre>&gt; mongrel_rails start</pre>
+
+	<p>In your browser, go to <a href="http://localhost:3000/people">http://localhost:3000/people</a> and see the list of people: Nic and Banjo.</p>
+
+
+	<p>Now, to see the private database, go to <a href="http://localhost:3000/people?private=1">http://localhost:3000/people?private=1</a> and see the private list. Its so private, I won&#8217;t show it here.</p>
+
+
+	<p>Note: you may need to refresh the private url to see the results. Perhaps Rails is caching the <span class="caps">SQL</span> even though its a different connection to a different database. If you know what&#8217;s happening here, please <a href="mailto:drnicwilliams@gmail.com?subject=MMC+caching+problem">email me</a> or the <a href="mailto:magicmodels@googlegroups.com?subject=MMC+caching+problem">forum</a>. Thanks.</p>
+
+
+	<h3>9. End</h3>
+
+
+	<p>There ends our example of a Rails application using one model class to access multiple databases cleanly.</p>
 
 
 	<h2>Pre-existing modules</h2>
@@ -158,7 +324,7 @@ other stories and things.</p>
 
 	<p>Comments are welcome. Send an email to <a href="mailto:drnicwilliams@gmail.com">Dr Nic Williams</a>.</p>
     <p class="coda">
-      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 8th April 2007<br>
+      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 9th April 2007<br>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>
