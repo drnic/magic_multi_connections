@@ -17,6 +17,7 @@ test/fixtures/people.yml
 test/fixtures/person.rb
 test/test_helper.rb
 test/test_magic_multi_connections.rb
+test/test_preexisting_module.rb
 website/index.html
 website/index.txt
 website/javascripts/rounded_corners_lite.inc.js
