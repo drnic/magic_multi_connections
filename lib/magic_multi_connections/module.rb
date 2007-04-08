@@ -7,6 +7,12 @@ class Module
     update_active_records
   end
   
+  def parent_module
+    parent = self.name.split('::')[0..-2].join('::')
+    parent = 'Object' if parent.blank?
+    parent.constantize
+  end
+  
   private 
   def update_active_records
     self.constants.each do |c_str|

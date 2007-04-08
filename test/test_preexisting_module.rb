@@ -9,6 +9,9 @@ module Preexisting
   class NotAciveRecord; end # similarly, this class should be ignored
 end
 
+module AnotherPre
+end
+
 class TestPreexistingModule < Test::Unit::TestCase
 
   def setup
@@ -23,5 +26,14 @@ class TestPreexistingModule < Test::Unit::TestCase
   
   # Rails can dynamically load classes when requested
   def test_update_on_load
+    AnotherPre.establish_connection :contact_repo
+    AnotherPre.class_eval <<-EOS
+      class Person < ActiveRecord::Base
+        def tester; end
+      end
+    EOS
+    assert(AnotherPre::Person.instance_methods.include?("tester"), "AnotherPre::Person should include #tester method")
+    assert_equal("AnotherPre::Person", AnotherPre::Person.active_connection_name)
+    p AnotherPre::Person.connection
   end
 end
