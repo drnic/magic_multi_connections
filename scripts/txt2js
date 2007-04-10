@@ -8,7 +8,7 @@ require 'active_support'
 require File.dirname(__FILE__) + '/../lib/magic_multi_connections/version.rb'
 
 version  = MagicMultiConnection::VERSION::STRING
-download = 'http://rubyforge.org/projects/compositekeys'
+download = 'http://rubyforge.org/projects/magicmodels'
 
 class Fixnum
   def ordinal

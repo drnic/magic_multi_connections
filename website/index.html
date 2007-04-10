@@ -281,22 +281,6 @@
 </pre></p>
 
 
-	<h2>Other tricks</h2>
-
-
-	<p>The Magic Multi-Connections includes <code>diff</code> and <code>diff?</code> methods extracted from the <a href="http://tfletcher.com/svn/rails-plugins/riff/README">Riff plugin</a> by <a href="http://tfletcher.com/">Tim Fletcher</a>, so that <code>id</code> values are ignored when comparing objects from different connections/namespaces.</p>
-
-
-	<p><pre class="syntax"><span class="comment"># Detect differences between two activerecords, e.g.</span>
-<span class="ident">new_person</span> <span class="punct">=</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">find_by_username</span><span class="punct">('</span><span class="string">drnic</span><span class="punct">')</span>
-<span class="ident">old_person</span> <span class="punct">=</span> <span class="constant">ContactRepository</span><span class="punct">::</span><span class="constant">Person</span><span class="punct">.</span><span class="ident">find_by_username</span><span class="punct">('</span><span class="string">drnic</span><span class="punct">')</span>
-
-<span class="ident">new_person</span><span class="punct">.</span><span class="ident">diff?</span><span class="punct">(</span><span class="ident">old_person</span><span class="punct">)</span>   <span class="comment"># =&gt; true</span>
-
-<span class="ident">new_person</span><span class="punct">.</span><span class="ident">diff</span><span class="punct">(</span><span class="ident">old_person</span><span class="punct">)</span>    <span class="comment"># =&gt; { :name =&gt; ['Dr Nic', 'Nic'], :age =&gt; [32, 20] }</span>
-</pre></p>
-
-
 	<h2>Dr Nic&#8217;s Blog</h2>
 
 
@@ -324,7 +308,7 @@ other stories and things.</p>
 
 	<p>Comments are welcome. Send an email to <a href="mailto:drnicwilliams@gmail.com">Dr Nic Williams</a>.</p>
     <p class="coda">
-      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 9th April 2007<br>
+      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 10th April 2007<br>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

@@ -190,18 +190,6 @@ Magic Multi-Connections works for these model classes as well.
 Admin::Page.active_connection_name # => "Admin::Page"
 </pre>
 
-h2. Other tricks
-
-The Magic Multi-Connections includes <code>diff</code> and <code>diff?</code> methods extracted from the "Riff plugin":http://tfletcher.com/svn/rails-plugins/riff/README by "Tim Fletcher":http://tfletcher.com/, so that <code>id</code> values are ignored when comparing objects from different connections/namespaces.
-
-<pre syntax="ruby"># Detect differences between two activerecords, e.g.
-new_person = Person.find_by_username('drnic')
-old_person = ContactRepository::Person.find_by_username('drnic')
-
-new_person.diff?(old_person)   # => true
-
-new_person.diff(old_person)    # => { :name => ['Dr Nic', 'Nic'], :age => [32, 20] }
-</pre>
 
 h2. Dr Nic's Blog
 
