@@ -1,2 +1,2 @@
 h1. Announcement JS file
-MagicAnnouncement.show('compositekeys', version);
+MagicAnnouncement.show('magic_multi_connections', version);

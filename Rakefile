@@ -22,7 +22,7 @@ HOMEPATH = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"
 NAME = "magic_multi_connections"
 REV = nil # UNCOMMENT IF REQUIRED: File.read(".svn/entries")[/committed-rev="(d+)"/, 1] rescue nil
 VERS = ENV['VERSION'] || (MagicMultiConnection::VERSION::STRING + (REV ? ".#{REV}" : ""))
-                          CLEAN.include ['**/.*.sw?', '*.gem', '.config']
+CLEAN.include ['**/.*.sw?', '*.gem', '.config', 'debug.log']
 RDOC_OPTS = ['--quiet', '--title', "magic_multi_connections documentation",
     "--opname", "index.html",
     "--line-numbers", 
