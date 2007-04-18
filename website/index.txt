@@ -190,6 +190,11 @@ Magic Multi-Connections works for these model classes as well.
 Admin::Page.active_connection_name # => "Admin::Page"
 </pre>
 
+h2. Related articles
+
+* Original blog article - "Magic Multi-Connections: A “facility in Rails to talk to more than one database at a time":http://drnicwilliams.com/2007/04/12/magic-multi-connections-a-facility-in-rails-to-talk-to-more-than-one-database-at-a-time/
+* "Discussed by DHH":http://www.loudthinking.com/arc/000610.html
+
 
 h2. Dr Nic's Blog
 
