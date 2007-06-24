@@ -4,6 +4,10 @@ h1. &#x2192; Ruby on Rails
 
 h1. &#x2192; ActiveRecords
 
+h2. WARNING
+
+Despite the 1.0.0 version number, various people have "experienced problems":http://joshknowles.com/2007/6/17/migrations-pains using this tool. I haven't yet found a solution (I haven't really been looking though), so please subscribe to the "forum":http://groups.google.com/group/magicmodels or "RubyForge news":http://rubyforge.org/export/rss_sfnewreleases.php for any updates on a solution.
+
 h2. What
 
 ActiveRecord models are allowed one connection to a database at a time, per class. Ruby on Rails sets up the default connection based on your database.yml configuration to automatically select *development*, *test* or *production*.

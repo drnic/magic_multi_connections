@@ -11,7 +11,7 @@ require 'hoe'
 include FileUtils
 require File.join(File.dirname(__FILE__), 'lib', 'magic_multi_connections', 'version')
 
-AUTHOR = "nicwilliams"  # can also be an array of Authors
+AUTHOR = "Dr Nic Williams"  # can also be an array of Authors
 EMAIL = "drnicwilliams@gmail.com"
 DESCRIPTION = "Your ActiveRecord classes can be accessed within multiple modules, each which targets a different DB connection"
 GEM_NAME = "magic_multi_connections" # what ppl will type to install your gem
