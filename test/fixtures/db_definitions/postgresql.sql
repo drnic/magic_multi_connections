@@ -5,3 +5,9 @@ CREATE TABLE "people" (
 	"age" int,
   PRIMARY KEY  ("id")
 );
+CREATE TABLE "addresses" (
+  "id" SERIAL,
+	"person_id" int,
+  "address" varchar(255),
+  PRIMARY KEY  ("id")
+);

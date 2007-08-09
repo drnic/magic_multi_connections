@@ -64,23 +64,29 @@ end
 SCHEMA_PATH = File.join(File.dirname(__FILE__), *%w(test fixtures db_definitions))
 
 
+namespace :postgresql do
+  desc 'Build the PostgreSQL test databases'
+  task :build_databases do 
+    sh %{ createdb "#{GEM_NAME}_unittest" }
+    sh %{ psql "#{GEM_NAME}_unittest" -f #{File.join(SCHEMA_PATH, 'postgresql.sql')} }
+    sh %{ createdb "#{GEM_NAME}_extra_unittest" }
+    sh %{ psql "#{GEM_NAME}_extra_unittest" -f #{File.join(SCHEMA_PATH, 'postgresql.sql')} }
+  end
+
+  desc 'Drop the PostgreSQL test databases'
+  task :drop_databases do 
+    sh %{ dropdb "#{GEM_NAME}_unittest" }
+    sh %{ dropdb "#{GEM_NAME}_extra_unittest" }
+  end
+
+  desc 'Rebuild the PostgreSQL test databases'
+  task :rebuild_databases => [:drop_databases, :build_databases]
+end
+
 desc 'Build the PostgreSQL test databases'
-task :build_postgresql_databases do 
-  sh %{ createdb "#{GEM_NAME}_unittest" }
-  sh %{ psql "#{GEM_NAME}_unittest" -f #{File.join(SCHEMA_PATH, 'postgresql.sql')} }
-  sh %{ createdb "#{GEM_NAME}_extra_unittest" }
-  sh %{ psql "#{GEM_NAME}_extra_unittest" -f #{File.join(SCHEMA_PATH, 'postgresql.sql')} }
-end
-
-desc 'Drop the PostgreSQL test databases'
-task :drop_postgresql_databases do 
-  sh %{ dropdb "#{GEM_NAME}_unittest" }
-  sh %{ dropdb "#{GEM_NAME}_extra_unittest" }
-end
-
-desc 'Rebuild the PostgreSQL test databases'
+task :build_postgresql_databases   => 'postgresql:build_databases'
+task :drop_postgresql_databases    => 'postgresql:drop_databases'
 task :rebuild_postgresql_databases => [:drop_postgresql_databases, :build_postgresql_databases]
-
 
 desc 'Generate website files'
 task :website_generate do
