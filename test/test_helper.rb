@@ -7,14 +7,14 @@ begin
   require 'connection'
 rescue MissingSourceFile => e
   # required for tests not run via test_#{adapter} rake tests, e.g. autotest
-  adapter = 'postgresql' #'sqlite'
+  adapter = 'mysql' #'sqlite', 'mysql'
   require "#{File.dirname(__FILE__)}/connections/native_#{adapter}/connection"
 end
 
 require File.dirname(__FILE__) + '/../lib/magic_multi_connections'
 
 
-models = %w[person contact_repository]
+models = %w[person contact_repository address soldier paycheck assignment classified habit]
 models.each { |model| require File.join(File.dirname(__FILE__), 'fixtures', model) }
 
 class Test::Unit::TestCase #:nodoc:

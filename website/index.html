@@ -33,7 +33,7 @@
     <h1 class=primary>Magic Multi-Connections</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/magicmodels"; return false'>
       Get Version
-      <a href="http://rubyforge.org/projects/magicmodels" class="numbers">1.0.0</a>
+      <a href="http://rubyforge.org/projects/magicmodels" class="numbers">1.2.0</a>
     </div>
     <h1>&#x2192; Ruby on Rails</h1>
 
@@ -44,7 +44,7 @@
 	<h2><span class="caps">WARNING</span></h2>
 
 
-	<p>Despite the 1.0.0 version number, various people have <a href="http://joshknowles.com/2007/6/17/migrations-pains">experienced problems</a> using this tool. I haven&#8217;t yet found a solution (I haven&#8217;t really been looking though), so please subscribe to the <a href="http://groups.google.com/group/magicmodels">forum</a> or <a href="http://rubyforge.org/export/rss_sfnewreleases.php">RubyForge news</a> for any updates on a solution.</p>
+	<p>Despite the 1.1.0 version number, this gem is not quite production ready.  Various people have <a href="http://joshknowles.com/2007/6/17/migrations-pains">experienced problems</a> using the 1.0.0 version. A solution was found to deal with this issue but it has not been fully tested, so please subscribe to the <a href="http://groups.google.com/group/magicmodels">forum</a> or <a href="http://rubyforge.org/export/rss_sfnewreleases.php">RubyForge news</a> for any updates.</p>
 
 
 	<h2>What</h2>
@@ -77,6 +77,21 @@
 
 
 	<p>You do not have to redefine your models for the multi-connection module <code>ContactRepository</code>, they are automatically picked up for you. Magically.</p>
+
+
+	<p><span class="caps">TODO</span>: Example about Associations</p>
+
+
+	<h2>Issues</h2>
+
+
+Despite the 1.1.0 version of this gem there are still a number of issues with this gem:
+<ul>
+<li>Single Table Inheritance is not currently supported</li>
+<li>No connection pooling for alternate databases</li>
+</ul>
+
+	<p>Any help would be greatly appreciated</p>
 
 
 	<h2>Installing</h2>
@@ -323,7 +338,7 @@ other stories and things.</p>
 
 	<p>Comments are welcome. Send an email to <a href="mailto:drnicwilliams@gmail.com">Dr Nic Williams</a>.</p>
     <p class="coda">
-      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 24th June 2007<br>
+      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 2nd January 2008<br>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

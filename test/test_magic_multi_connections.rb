@@ -5,7 +5,7 @@ module NormalModule; end
 class TestMagicMultiConnection < Test::Unit::TestCase
 
   def setup
-    create_fixtures :people
+    create_fixtures :people, :addresses
   end
   
   def test_classes
@@ -23,4 +23,5 @@ class TestMagicMultiConnection < Test::Unit::TestCase
     assert_raise(NameError) { NormalModule::Person }
     
   end
+  
 end

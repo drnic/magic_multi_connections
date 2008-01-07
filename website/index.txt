@@ -6,7 +6,7 @@ h1. &#x2192; ActiveRecords
 
 h2. WARNING
 
-Despite the 1.0.0 version number, various people have "experienced problems":http://joshknowles.com/2007/6/17/migrations-pains using this tool. I haven't yet found a solution (I haven't really been looking though), so please subscribe to the "forum":http://groups.google.com/group/magicmodels or "RubyForge news":http://rubyforge.org/export/rss_sfnewreleases.php for any updates on a solution.
+Despite the 1.2.0 version number, this gem is not quite production ready.  Various people have "experienced problems":http://joshknowles.com/2007/6/17/migrations-pains using the 1.0.0 version. A solution was found to deal with this issue but it has not been fully tested, so please subscribe to the "forum":http://groups.google.com/group/magicmodels or "RubyForge news":http://rubyforge.org/export/rss_sfnewreleases.php for any updates.
 
 h2. What
 
@@ -31,7 +31,73 @@ old_person = ContactRepository::Person.find_by_email(email)
 person = old_person.create_as(Person)
 </pre>
 
-You do not have to redefine your models for the multi-connection module <code>ContactRepository</code>, they are automatically picked up for you. Magically.
+You do not have to redefine your models for the multi-connection module <code>ContactRepository</code>, they are automatically picked up for you. Magically.  
+
+h3. But what about associations, do they change over as well? 
+
+Yup! These are now supported, though maybe not as magically:
+
+<pre syntax="ruby">class Person < ActiveRecord::Base
+  has_many :habits, :mirrors_db_connection => true
+end
+
+class Habit < ActiveRecord::Base
+  belongs_to :person, :mirrors_db_connection => true
+end
+ActiveRecord::Base.establish_connection :production
+
+module ContactRepository
+  establish_connection :contact_repo
+end
+
+old_person = ContactRepository::Person.find_by_email(email)
+old_person.habits.first.connection # => contact_repo
+</pre>
+
+h3. Hey wait a minute, wasn't there some kind of automatic namespacing association?
+
+Yes but that has been deprecated.  In the previous version of this gem associations were handled by automatically changing any assocation whose target class was in the same namespace.  While it is still possible to do this, this automatic namespace association was at best clunky and will be removed in the 2.0 release.  Here is an example of how it works:
+
+<pre syntax="ruby">ActiveRecord::Base.establish_connection :production
+
+module Military 
+  class Soldier < ActiveRecord::Base
+    has_many :assignments
+    has_many :paychecks
+  end
+
+  class Assignment < ActiveRecord::Base
+    belongs_to :person, :mirrors_db_connection => true
+  end
+
+  module Classified
+    establish_connection :classified
+  end
+end
+
+class Paycheck
+  belongs_to :soldier
+end
+
+Military::Classified::Soldier.reflections[:assignments].klass # => Military::Classified::Assignment
+Military::Classified::Soldier.reflections[:assignments].klass.connection # => :classified
+Military::Classified::Soldier.reflections[:paycheck].klass # => Paycheck
+Military::Classified::Soldier.reflections[:paycheck].klass.connection # => :production
+</pre>
+
+Again this method will be deprecated in the 2.0 release so try and avoid using this.
+
+h3. HOW TO TURN OFF DEFAULT NAMESPACE REFLECTION MIRRORING
+
+h2. Issues
+
+Despite the 1.1.0 version of this gem there are still a number of issues with this gem:
+<ul>
+<li>Single Table Inheritance is not currently supported</li>
+<li>No connection pooling for alternate databases</li>
+</ul>
+
+Any help would be greatly appreciated
 
 h2. Installing
 

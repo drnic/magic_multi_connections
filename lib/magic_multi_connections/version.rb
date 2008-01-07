@@ -1,7 +1,7 @@
 module MagicMultiConnection #:nodoc:
   module VERSION #:nodoc:
     MAJOR = 1
-    MINOR = 0
+    MINOR = 2
     TINY  = 0
 
     STRING = [MAJOR, MINOR, TINY].join('.')

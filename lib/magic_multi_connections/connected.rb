@@ -2,6 +2,17 @@ module MagicMultiConnection::Connected
   def self.included(base)
     base.instance_eval do
       alias :pre_connected_const_missing :const_missing
+      
+      def namespace_reflections_mirror_db
+        @namespace_reflections_mirror_db
+      end
+  
+      def namespace_reflections_mirror_db=(value)
+        if value
+          warn "DEPRACATION WARNING: Automatic namespace associations will be removed in the next major release of this gem. Please use explicit association statments."
+        end
+        @namespace_reflections_mirror_db = value
+      end
   
       def const_missing(const_id)
         # return pre_connected_const_missing(const_id) rescue nil
@@ -30,11 +41,27 @@ module MagicMultiConnection::Connected
         result = self.const_set(class_name, klass)
         
         # Cycle through all reflections, and redefine those reflections
-        # for all relationships where the ActiveRecord Object is in the
-        # same namespace.
+        # for all relationships where the ActiveRecord Object follows one
+        # of the two following conditions: 
+        # 1. The module is set to mirror relationships for the namespace, the reflection object is in
+        #    the reflection owner's namespace and the mirror_db_connection object is not explicitly set
+        # 2. The reflections mirror_db_connection is explicitly set to true.
         parent_mod = self.parent_module
         superclass.reflections.each do |reflection_name, reflection|
-          if reflection.class_name.to_s.include?(parent_mod.to_s)          
+          
+          # First do a check to see if code is using a depracated method
+          # of associations:
+          reflection_mirrors_db = false
+          if reflection.mirror_db_connection == true
+            reflection_mirrors_db = true
+          elsif (reflection.mirror_db_connection == :default && 
+                 reflection.klass.to_s.include?(parent_mod.to_s) && 
+                 namespace_reflections_mirror_db)
+            warn "DEPRACATION WARNING: Automatic namespace associations will be removed in the next major release of this gem. Please use explicit association statments."
+            reflection_mirrors_db = true
+          end
+          
+          if reflection_mirrors_db
             # redefine the reflection
             new_class_name = reflection.class_name.sub(parent_mod.to_s, "::#{self.name}")
             new_options = reflection.options.dup
