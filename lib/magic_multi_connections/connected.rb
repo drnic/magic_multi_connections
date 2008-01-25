@@ -55,8 +55,8 @@ module MagicMultiConnection::Connected
           if reflection.mirror_db_connection == true
             reflection_mirrors_db = true
           elsif (reflection.mirror_db_connection == :default && 
-                 reflection.klass.to_s.include?(parent_mod.to_s) && 
-                 namespace_reflections_mirror_db)
+                 namespace_reflections_mirror_db &&
+                 Regexp.new("(::|^)#{parent_mod.to_s}(::|$)") =~ reflection.klass.to_s)
             warn "DEPRACATION WARNING: Automatic namespace associations will be removed in the next major release of this gem. Please use explicit association statments."
             reflection_mirrors_db = true
           end
