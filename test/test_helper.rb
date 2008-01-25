@@ -14,7 +14,7 @@ end
 require File.dirname(__FILE__) + '/../lib/magic_multi_connections'
 
 
-models = %w[person contact_repository address soldier paycheck assignment classified habit]
+models = %w[person contact_repository address soldier paycheck assignment classified habit citation]
 models.each { |model| require File.join(File.dirname(__FILE__), 'fixtures', model) }
 
 class Test::Unit::TestCase #:nodoc:

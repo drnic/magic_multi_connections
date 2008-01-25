@@ -11,6 +11,7 @@ class TestMmcAssociations < Test::Unit::TestCase
       Army::Soldier
       Army::Assignment
       Paycheck
+      Justice::Citation
     end
     
     assert_equal Army::Assignment, Army::Soldier.reflections[:assignments].klass
@@ -21,6 +22,7 @@ class TestMmcAssociations < Test::Unit::TestCase
     assert_nothing_raised(Exception) { Army::Classified::Soldier }
     assert_equal Army::Classified::Assignment, Army::Classified::Soldier.reflections[:assignments].klass
     assert_equal Paycheck, Army::Classified::Soldier.reflections[:paychecks].klass
+    assert_equal Justice::Citation, Army::Classified::Soldier.reflections[:citations].klass
   end
   
   def test_explicit_associations

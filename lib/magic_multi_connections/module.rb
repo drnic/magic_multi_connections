@@ -1,7 +1,7 @@
 class Module
   attr_accessor :connection_spec
   
-  def establish_connection(connection_spec, namespace_reflections_mirror_db = true)
+  def establish_connection(connection_spec, namespace_reflections_mirror_db = :default)
     include MagicMultiConnection::Connected
     instance_variable_set '@connection_spec', connection_spec
     instance_variable_set '@namespace_reflections_mirror_db', namespace_reflections_mirror_db
