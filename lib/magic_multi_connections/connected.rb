@@ -63,7 +63,7 @@ module MagicMultiConnection::Connected
           
           if reflection_mirrors_db
             # redefine the reflection
-            new_class_name = reflection.class_name.sub(parent_mod.to_s, "::#{self.name}")
+            new_class_name = reflection.class_name.sub(parent_mod.to_s, "::#{self.name}").gsub("::::", "::")
             new_options = reflection.options.dup
             new_options[:class_name] = new_class_name
             case reflection.macro
