@@ -10,6 +10,9 @@ Despite the 1.2.0 version number, this gem is not quite production ready.  Vario
 
 h2. What
 
+<div style="float: right" id="mocra_ad_div" />
+<script src="http://ads.mocra.com/sites/pastie.js">
+
 ActiveRecord models are allowed one connection to a database at a time, per class. Ruby on Rails sets up the default connection based on your database.yml configuration to automatically select *development*, *test* or *production*.
 
 But, what if you want to access two or more databases - have 2+ connections open - at the same time. ActiveRecord requires that you subclass <code>ActiveRecord::Base</code>. 

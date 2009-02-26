@@ -136,3 +136,11 @@ pre, code {
 	cursor:	hand;
 }
 
+.ads {
+  background-color: #48003C;
+  padding: 10px;
+}
+.ads h4 {
+  font-size: 100%;
+  margin: 0px;
+}
