@@ -17,7 +17,7 @@ module MagicMultiConnection::Connected
       def const_missing(const_id)
         # return pre_connected_const_missing(const_id) rescue nil
         target_class = "#{self.parent_module}::#{const_id}".constantize rescue nil
-        raise NameError.new("uninitialized constant #{self.parent_module}::#{const_id}") unless target_class
+        return super if target_class.nil?
         
         # The code below is used to solve an issue with the acts_as_versioned
         # plugin.  Because the acts_as_versioned plugin creates a 'Version' model
