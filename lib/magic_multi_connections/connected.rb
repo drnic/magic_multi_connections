@@ -17,7 +17,7 @@ module MagicMultiConnection::Connected
       def const_missing(const_id)
         # return pre_connected_const_missing(const_id) rescue nil
         target_class = "#{self.parent_module}::#{const_id}".constantize rescue nil
-        raise NameError.new("uninitialized constant \{const_id}") unless target_class
+        raise NameError.new("uninitialized constant #{self.parent_module}::#{const_id}") unless target_class
         
         # The code below is used to solve an issue with the acts_as_versioned
         # plugin.  Because the acts_as_versioned plugin creates a 'Version' model
@@ -57,7 +57,7 @@ module MagicMultiConnection::Connected
           elsif (reflection.mirror_db_connection == :default && 
                  namespace_reflections_mirror_db &&
                  Regexp.new("(::|^)#{parent_mod.to_s}(::|$)") =~ reflection.klass.to_s)
-            warn "DEPRACATION WARNING: Automatic namespace associations will be removed in the next major release of this gem. Please use explicit association statments."
+            warn "DEPRECATION WARNING: Automatic namespace associations will be removed in the next major release of this gem. Please use explicit association statments."
             reflection_mirrors_db = true
           end
           

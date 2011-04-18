@@ -1,3 +1,8 @@
+require "bundler"
+Bundler.setup
+
+$:.unshift(File.dirname(__FILE__) + '/../lib')
+
 require 'test/unit'
 require 'rubygems'
 require 'active_record'
@@ -11,14 +16,14 @@ rescue MissingSourceFile => e
   require "#{File.dirname(__FILE__)}/connections/native_#{adapter}/connection"
 end
 
-require File.dirname(__FILE__) + '/../lib/magic_multi_connections'
+require 'magic_multi_connections'
 
 
 models = %w[person contact_repository address soldier paycheck assignment classified habit citation]
-models.each { |model| require File.join(File.dirname(__FILE__), 'fixtures', model) }
+models.each { |model| require File.join(File.expand_path("../fixtures/", __FILE__), model) }
 
 class Test::Unit::TestCase #:nodoc:
-  self.fixture_path = File.dirname(__FILE__) + "/fixtures/"
+  self.fixture_path = File.expand_path("../fixtures/", __FILE__)
   self.use_instantiated_fixtures = false
   self.use_transactional_fixtures = true #(ENV['AR_NO_TX_FIXTURES'] != "yes")
 
